@@ -1,110 +1,61 @@
-@()
+@(courses: Array[Map[String, Any]], instructors: Array[Map[String, Any]])
 
 @main("Build-A-Schedule") {
-  <div class="container">
-
-    <h1>Build-A-Schedule</h1>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">Course</th>
-                <th scope="col">Sections</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <th scope="row">1370</th>
-                <td>
-                    <div class="row g-2">
-                        <div class="col-auto">
-                            <div class="input-group">
-                                <select class="form-select">
-                                    <option value="12" selected>Ayati</option>
-                                    <option value="7">Gao</option>
-                                    <option value="2">Kim</option>
-                                    <option value="23">Schweller</option>
-                                    <option value="31">Tomai</option>
-                                    <option value="3">Wylie</option>
-                                </select>
-                                <button class="btn btn-danger">-</button>
-                            </div>
-                        </div>
-
-                        <div class="col-auto">
-                            <div class="input-group">
-                                <select class="form-select">
-                                    <option value="12">Ayati</option>
-                                    <option value="7">Gao</option>
-                                    <option value="2" selected>Kim</option>
-                                    <option value="23">Schweller</option>
-                                    <option value="31">Tomai</option>
-                                    <option value="3">Wylie</option>
-                                </select>
-                                <button class="btn btn-danger">-</button>
-                            </div>
-                        </div>
-
-                        <div class="col-auto">
-                            <select class="form-select">
-                                <option disabled value="-1" selected>Add Section...</option>
-                                <option value="12">Ayati</option>
-                                <option value="7">Gao</option>
-                                <option value="2">Kim</option>
-                                <option value="23">Schweller</option>
-                                <option value="31">Tomai</option>
-                                <option value="3">Wylie</option>
-                            </select>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-
-            <tr>
-                <th scope="row">2380</th>
-                <td>
-                    <div class="row g-2">
-                        <div class="col-auto">
-                            <div class="input-group">
-                                <select class="form-select">
-                                    <option value="12">Ayati</option>
-                                    <option value="7">Gao</option>
-                                    <option value="2">Kim</option>
-                                    <option value="23" selected>Schweller</option>
-                                    <option value="31">Tomai</option>
-                                    <option value="3">Wylie</option>
-                                </select>
-                                <button class="btn btn-danger">-</button>
-                            </div>
-                        </div>
-
-                        <div class="col-auto">
-                            <select class="form-select">
-                                <option disabled value="-1" selected>Add Section...</option>
-                                <option value="12">Ayati</option>
-                                <option value="7">Gao</option>
-                                <option value="2">Kim</option>
-                                <option value="23">Schweller</option>
-                                <option value="31">Tomai</option>
-                                <option value="3">Wylie</option>
-                            </select>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-
-    <div class="row">
-        <div class="col-auto">
-            <div class="input-group mb-3">
-                <form>
-                    <input type="text" class="form-control" placeholder="Course Number" name="addCourse" />
-                    <button type="submit" class="btn btn-primary" id="button-addon2">Add Course</button>
-                </form>
+    <div class="container">
+  
+      <h1>Build-A-Schedule</h1>
+  
+      <table class="table">
+          <thead>
+              <tr>
+                  <th scope="col">Course</th>
+                  <th scope="col">Sections</th>
+              </tr>
+          </thead>
+          <tbody>
+              @for(course <- courses) {
+                  <tr>
+                      <th scope="row">@course("name")</th>
+                      <td>
+                          <div class="row g-2">
+                              @for(section <- course("sections").asInstanceOf[Array[Map[String, Any]]]) {
+                                  <div class="col-auto">
+                                      <div class="input-group">
+                                          <select class="form-select">
+                                              @for(instructor <- instructors) {
+                                                <option value="@instructor("id")" @(if(instructor("id") == section("instructor")) "selected")>@instructor("name")</option>
+                                              }
+                                          </select>
+                                          <button class="btn btn-danger">-</button>
+                                      </div>
+                                  </div>
+                              }
+                              <div class="col-auto">
+                                  <select class="form-select">
+                                      <option disabled value="-1" selected>Add Section...</option>
+                                      @for(instructor <- instructors) {
+                                          <option value="@instructor("id")">@instructor("name")</option>
+                                      }
+                                  </select>
+                              </div>
+                          </div>
+                      </td>
+                  </tr>
+              }
+          </tbody>
+      </table>
+  
+      <div class="row">
+          <div class="col-auto">
+              <div class="input-group mb-3">
+                  <form>
+                      <input type="text" class="form-control" placeholder="Course Number" name="addCourse" />
+                      <button type="submit" class="btn btn-primary" id="button-addon2">Add Course</button>
+                  </form>
+              </div>
             </div>
         </div>
     </div>
-
-    </div>
 }
+            
+    
