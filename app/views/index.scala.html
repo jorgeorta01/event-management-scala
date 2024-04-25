@@ -1,4 +1,4 @@
-@(courses: Array[Map[String, Any]], instructors: Array[Map[String, Any]])
+@(courses: Seq[Course], instructors: Array[Map[String, Any]])
 
 @main("Build-A-Schedule") {
     <div class="container">
@@ -15,15 +15,15 @@
           <tbody>
               @for(course <- courses) {
                   <tr>
-                      <th scope="row">@course("name")</th>
+                      <th scope="row">@course.name</th>
                       <td>
                           <div class="row g-2">
-                              @for(section <- course("sections").asInstanceOf[Array[Map[String, Any]]]) {
+                              @for(section <- course.sections) {
                                   <div class="col-auto">
                                       <div class="input-group">
                                           <select class="form-select">
                                               @for(instructor <- instructors) {
-                                                <option value="@instructor("id")" @(if(instructor("id") == section("instructor")) "selected")>@instructor("name")</option>
+                                                <option value="@instructor("id")" @(if(instructor("id") == section.instructorId) "selected")>@instructor("name")</option>
                                               }
                                           </select>
                                           <button class="btn btn-danger">-</button>
