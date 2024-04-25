@@ -2,60 +2,80 @@
 
 @main("Build-A-Schedule") {
     <div class="container">
-  
-      <h1>Build-A-Schedule</h1>
-  
-      <table class="table">
-          <thead>
-              <tr>
-                  <th scope="col">Course</th>
-                  <th scope="col">Sections</th>
-              </tr>
-          </thead>
-          <tbody>
-              @for(course <- courses) {
-                  <tr>
-                      <th scope="row">@course.name</th>
-                      <td>
-                          <div class="row g-2">
-                              @for(section <- course.sections) {
-                                  <div class="col-auto">
-                                      <div class="input-group">
-                                          <select class="form-select">
-                                              @for(instructor <- instructors) {
-                                                <option value="@instructor("id")" @(if(instructor("id") == section.instructorId) "selected")>@instructor("name")</option>
-                                              }
-                                          </select>
-                                          <button class="btn btn-danger">-</button>
-                                      </div>
-                                  </div>
-                              }
-                              <div class="col-auto">
-                                  <select class="form-select">
-                                      <option disabled value="-1" selected>Add Section...</option>
-                                      @for(instructor <- instructors) {
-                                          <option value="@instructor("id")">@instructor("name")</option>
-                                      }
-                                  </select>
-                              </div>
-                          </div>
-                      </td>
-                  </tr>
-              }
-          </tbody>
-      </table>
-  
-      <div class="row">
-          <div class="col-auto">
-              <div class="input-group mb-3">
-                  <form>
-                      <input type="text" class="form-control" placeholder="Course Number" name="addCourse" />
-                      <button type="submit" class="btn btn-primary" id="button-addon2">Add Course</button>
-                  </form>
-              </div>
+        <h1>Build-A-Schedule</h1>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Course</th>
+                    <th scope="col">Sections</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for(course <- courses) {
+                    <tr>
+                        <th scope="row">@course.name</th>
+                        <td>
+                            <div class="row g-2">
+                                @for(section <- course.sections) {
+                                    <div class="col-auto">
+                                        <div class="input-group">
+                                            <form id="section_@section.id" action="/changeSection" method="POST">
+                                                <input type="hidden" name="id" value="@section.id">
+
+                                                <div class="input-group">
+                                                    <select class="form-select" name="instructorId" onchange="submitForm2('section_@section.id')">
+                                                        @for(instructor <- instructors) {
+                                                            <option value="@instructor("id")" @(if(instructor("id") == section.instructorId) "selected")>@instructor("name")</option>
+                                                        }
+                                                    </select>
+
+                                                </div>
+                                            </form>
+                                            <form id="@section.id" action="/deleteSection" method="POST">
+                                                <input type="hidden" name="id" value="@section.id">
+                                                <button type="submit" class="btn btn-danger">-</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                }
+                            <div class="col-auto">
+                                <form id="course_@course.id" action="/addInstructor" method="POST">
+                                    <input type="hidden" name="courseId" value="@course.id">
+                                    <select class="form-select" name="instructorId" onchange="submitForm('course_@course.id')">
+                                        <option disabled value="-1" selected>Add Section...</option>
+                                        @for(instructor <- instructors) {
+                                            <option value="@instructor("id")">@instructor("name")</option>
+                                        }
+                                    </select>
+                                </form>
+                            </div>
+
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="row">
+            <div class="col-auto">
+                <div class="input-group mb-3">
+                    <form action="/addCourse" method="POST">
+                        <input type="text" class="form-control" placeholder="Course Number" name="addCourse" />
+                        <button type="submit" class="btn btn-primary" id="button-addon2">Add Course</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-}
+    <script>
+        function submitForm(formId) {
             
-    
+            console.log(formId)
+            document.getElementById(formId).submit();
+        }
+        function submitForm2(formId) {
+            document.getElementById(formId).submit();
+        }
+    </script>
+}
